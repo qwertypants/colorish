@@ -12,12 +12,12 @@
             width: 100%;
             position: relative;
             margin: 0 auto;
+            overflow: hidden;
         }
+
         .column {
-            width: 32%;
-            display: inline-block;
-            padding: 0;
-            margin: 0 0.5% 0 0;
+            float: left;
+            width: 16.6666666%;
         }
         #r {
             background-color: hsl(0, 100%, 50%);
@@ -28,43 +28,62 @@
         #b {
             background-color: hsl(240, 100%, 50%);
         }
+        #c{
+            background-color: hsl(180, 100%, 50%);
+        }
+        #m{
+            background-color: hsl(300, 100%, 50%);
+        }
+        #y{
+            background-color: hsl(60, 100%, 50%)
+        }
     </style>
   </head>
   <div id="container">
       <div class="column" id="r"></div>
       <div class="column" id="g"></div>
       <div class="column" id="b"></div>
+      <div class="column" id="c"></div>
+      <div class="column" id="m"></div>
+      <div class="column" id="y"></div>
   </div>
   <body>
   <script>
     window.onmousemove = mouse;
     window.onresize = resize;
-    var r = document.getElementById('r');
-    var g = document.getElementById('g');
-    var b = document.getElementById('b');
+
+    var winHeight = window.outerHeight;
+    var winWidth = window.innerWidth;
+    var colors = [
+        [document.getElementById('r'), 0],
+        [document.getElementById('g'), 120],
+        [document.getElementById('b'), 240],
+        [document.getElementById('c'), 180],
+        [document.getElementById('m'), 300],
+        [document.getElementById('y'), 60]
+    ];
 
     window.onload = function(){
         resize();
     }
 
     function resize(event){
-        var winHeight = window.outerHeight;
-        r.style.height = winHeight + 'px';
-        g.style.height = winHeight + 'px';
-        b.style.height = winHeight + 'px';
+        winHeight = window.outerHeight;
+        colors.forEach(function(val, key){
+            val[0].style.height = winHeight + 'px';
+        });
     }
 
     function mouse(event){
         var saturation, lightness;
-        saturation = Math.floor(mapN(event.x, 0, 1000, 0, 100));
-        lightness = Math.floor(mapN(event.y, 0, 600, 0, 100));
-        setColor(r, 'hsl(0,'+ saturation +'%, '+ lightness +'%)');
-        setColor(g, 'hsl(120,'+ saturation +'%, '+ lightness +'%)');
-        setColor(b, 'hsl(240,'+ saturation +'%, '+ lightness +'%)');
+        saturation = Math.floor(mapN(event.x, 0, winHeight, 0, 100));
+        lightness = Math.floor(mapN(event.y, 0, winWidth, 0, 100));
+
+        colors.forEach(function(val, key){
+            val[0].style.backgroundColor = 'hsl('+ val[1] +','+ saturation +'%, '+ lightness +'%)';
+        });
     }
-    function setColor(element, color){
-        element.style.backgroundColor = color;
-    }
+
     function mapN(x, in_min, in_max, out_min, out_max){
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
