@@ -51,9 +51,12 @@
   <script>
     window.onmousemove = mouse;
     window.onresize = resize;
+    document.addEventListener('touchmove', touch);
 
-    var winHeight = window.outerHeight;
-    var winWidth = window.innerWidth;
+    var winHeight = window.screen.height; //window.outerHeight;
+    var winWidth = window.screen.width; //window.innerWidth;
+    // alert(winHeight)
+    var saturation, lightness;
     var colors = [
         [document.getElementById('r'), 0],
         [document.getElementById('g'), 120],
@@ -65,21 +68,29 @@
 
     window.onload = function(){
         resize();
-    }
+    };
 
-    function resize(event){
-        winHeight = window.outerHeight;
-        colors.forEach(function(val, key){
+    function resize(){
+        colors.forEach(function(val){
             val[0].style.height = winHeight + 'px';
         });
     }
 
     function mouse(event){
-        var saturation, lightness;
         saturation = Math.floor(mapN(event.x, 0, winHeight, 0, 100));
         lightness = Math.floor(mapN(event.y, 0, winWidth, 0, 100));
+        updateColor(saturation, lightness);
+    }
 
-        colors.forEach(function(val, key){
+    function touch(event){
+        event.preventDefault();
+        saturation = Math.floor(mapN(event.targetTouches[0].pageX, 0, winHeight, 0, 100));
+        lightness = Math.floor(mapN(event.targetTouches[0].pageY, 0, winWidth, 0, 100));
+        updateColor(saturation, lightness);
+    }
+
+    function updateColor(saturation, lightness){
+        colors.forEach(function(val){
             val[0].style.backgroundColor = 'hsl('+ val[1] +','+ saturation +'%, '+ lightness +'%)';
         });
     }
