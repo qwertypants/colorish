@@ -53,9 +53,8 @@
     window.onresize = resize;
     document.addEventListener('touchmove', touch);
 
-    var winHeight = window.screen.height; //window.outerHeight;
-    var winWidth = window.screen.width; //window.innerWidth;
-    // alert(winHeight)
+    var winHeight = document.documentElement.clientHeight;
+    var winWidth = window.screen.width;
     var saturation, lightness;
     var colors = [
         [document.getElementById('r'), 0],
@@ -69,6 +68,7 @@
     window.onload = function(){
         resize();
     };
+
 
     function resize(){
         colors.forEach(function(val){
